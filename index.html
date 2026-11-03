@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ウミガメのスープ</title>
+<meta name="theme-color" content="#0d1522">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1522; --deep:#131e30; --raise:#1a2740; --line:#26354f;
+  --paper:#ece7dc; --soft:#b9c1ce; --mute:#8592a6;
+  --yes:#5fd3b5; --no:#f0796b; --part:#f2c14e; --na:#8a96aa; --ask:#9fb4ff;
+  --redact:#03060b;
+  --tone:#f2b45a;
+  --serif:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --sans:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100dvh; color:var(--paper); font-family:var(--sans); font-size:16px; line-height:1.7;
+  background:var(--ink);
+  background-image:radial-gradient(140% 70% at 50% -20%, #1b2c48 0%, rgba(13,21,34,0) 60%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+[data-tone="ほっこり"]{--tone:#f2b45a}
+[data-tone="ブラック"]{--tone:#b48cf0}
+[data-tone="ホラー"]{--tone:#e2546b}
+button,textarea,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ask);outline-offset:2px;border-radius:6px}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+
+/* ---------- 入室 ---------- */
+.gate{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding-top:48px;padding-bottom:48px}
+.mark{font-family:var(--serif);font-weight:800;font-size:clamp(2.6rem,11vw,4rem);line-height:1.15;letter-spacing:.02em;margin:0}
+.mark span{display:block}
+.mark .sub{font-size:.42em;font-weight:500;color:var(--soft);letter-spacing:.12em;margin-top:.9em}
+.gate p{color:var(--soft);margin:2rem 0 1.25rem;max-width:30em}
+.field{display:flex;gap:8px}
+.field input{flex:1;min-width:0;background:var(--deep);border:1px solid var(--line);border-radius:var(--r);padding:.8rem 1rem}
+.field input::placeholder{color:var(--mute)}
+.btn{border:0;border-radius:var(--r);padding:.8rem 1.2rem;background:var(--paper);color:var(--ink);font-weight:700}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:var(--soft);border:1px solid var(--line);font-weight:500}
+.err{color:var(--no);font-size:.9rem;margin-top:.75rem;min-height:1.5em}
+
+/* ---------- 一覧 ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0 8px}
+.top .logo{font-family:var(--serif);font-weight:800;font-size:1.25rem;margin:0}
+.link{background:none;border:0;color:var(--mute);padding:6px 0;font-size:.9rem}
+.lead{color:var(--soft);margin:8px 0 28px}
+.cases{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.case{border-bottom:1px solid var(--line)}
+.case button{width:100%;text-align:left;background:none;border:0;padding:20px 0 20px 18px;position:relative;display:grid;gap:6px}
+.case button::before{content:"";position:absolute;left:0;top:22px;bottom:22px;width:3px;border-radius:2px;background:var(--tone)}
+.case .t{font-family:var(--serif);font-weight:700;font-size:1.3rem;line-height:1.35}
+.case .p{color:var(--soft);font-size:.92rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.82rem;color:var(--mute)}
+.meta .tone{color:var(--tone)}
+.state-done{color:var(--yes)}
+
+/* ---------- プレイ ---------- */
+.play{padding-bottom:220px}
+.bar{position:sticky;top:0;z-index:5;background:rgba(13,21,34,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:52px}
+.bar .count{font-size:.85rem;color:var(--mute)}
+.problem{padding:28px 0 8px}
+.problem .meta{margin-bottom:10px}
+.problem h1{font-family:var(--serif);font-weight:800;font-size:1.65rem;line-height:1.35;margin:0 0 14px}
+.problem .q{font-family:var(--serif);font-size:1.22rem;line-height:1.95;margin:0}
+
+/* 黒塗りの真相 */
+.file{margin:28px 0 8px;padding:18px 18px 14px;background:var(--deep);border:1px solid var(--line);border-radius:14px}
+.file-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.file-head h2{font-family:var(--serif);font-size:1.05rem;margin:0}
+.file-head .n{font-size:.85rem;color:var(--mute)}
+.lines{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ln{position:relative;min-height:2.3rem;display:flex;align-items:center;border-radius:4px}
+.ln .slab{height:1.15rem;border-radius:2px;background:var(--redact);
+  background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.035) 0 6px,transparent 6px 12px)}
+.ln.opt .slab{background:transparent;border:1px dashed #3a4a66;background-image:none}
+.ln .tag{margin-left:10px;font-size:.75rem;color:var(--mute);white-space:nowrap}
+.ln.open{padding:6px 0 6px 12px;border-left:3px solid var(--tone)}
+.ln.open .txt{font-family:var(--serif);font-size:1.02rem;line-height:1.6}
+.ln.open .by{display:block;font-family:var(--sans);font-size:.75rem;color:var(--mute)}
+.ln.fresh::after{content:"";position:absolute;inset:0;background:var(--redact);transform-origin:right;animation:wipe .9s cubic-bezier(.6,0,.2,1) .15s forwards}
+@keyframes wipe{to{transform:scaleX(0)}}
+.ready{margin-top:14px;font-size:.9rem;color:var(--yes)}
+
+/* 質問ログ */
+.log{list-style:none;margin:28px 0 0;padding:0}
+.qa{padding:14px 0;border-bottom:1px solid rgba(38,53,79,.6)}
+.qa .row{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.qa .qq{flex:1}
+.qa .no{color:var(--mute);font-size:.8rem;margin-right:6px}
+.badge{flex:none;font-weight:700;font-size:.88rem;padding:.15rem .7rem;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.a-YES{color:var(--yes)} .a-NO{color:var(--no)} .a-部分的にYES{color:var(--part)} .a-関係ありません{color:var(--na)} .a-質問を変えてください{color:var(--ask)}
+.a-wait{color:var(--mute);border-style:dashed}
+.sub{margin-top:6px;font-size:.84rem;color:var(--mute);display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+.sub .note{color:var(--part)}
+.sub .hit{color:var(--tone)}
+.sub button{background:none;border:0;padding:0;color:var(--mute);text-decoration:underline;text-underline-offset:3px;font-size:.84rem}
+.hintline{padding:14px 0;border-bottom:1px solid rgba(38,53,79,.6);color:var(--ask);font-size:.95rem}
+.empty{color:var(--mute);padding:18px 0;font-size:.95rem}
+
+/* 入力欄 */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--ink);padding-top:10px}
+.dock::before{content:"";position:absolute;left:0;right:0;top:-28px;height:28px;background:linear-gradient(to top,var(--ink),rgba(13,21,34,0));pointer-events:none}
+.log>li{scroll-margin-bottom:190px}
+.dock .wrap{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+.acts{display:flex;gap:8px;margin-bottom:8px;overflow-x:auto}
+.acts button{flex:none;background:var(--raise);border:1px solid var(--line);border-radius:999px;padding:.35rem .9rem;font-size:.85rem;color:var(--soft)}
+.acts .solve{color:var(--ink);background:var(--tone);border-color:var(--tone);font-weight:700}
+.compose{display:flex;gap:8px;align-items:flex-end;background:var(--deep);border:1px solid var(--line);border-radius:14px;padding:6px 6px 6px 14px}
+.compose textarea{flex:1;resize:none;border:0;background:transparent;padding:.55rem 0;max-height:7.5rem;line-height:1.5}
+.compose textarea:focus{outline:none}
+.compose:focus-within{border-color:#3d5378}
+.compose .btn{padding:.6rem 1rem}
+.dock .err{margin:.4rem 0 0;min-height:0}
+
+/* シート */
+.sheet-bg{position:fixed;inset:0;z-index:10;background:rgba(3,6,11,.66);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:640px;background:var(--deep);border:1px solid var(--line);border-bottom:0;border-radius:18px 18px 0 0;padding:22px 16px calc(18px + env(safe-area-inset-bottom));animation:up .28s ease-out}
+@keyframes up{from{transform:translateY(24px);opacity:0}}
+.sheet h3{font-family:var(--serif);font-size:1.2rem;margin:0 0 6px}
+.sheet p{color:var(--soft);font-size:.92rem;margin:0 0 12px}
+.sheet textarea{width:100%;min-height:8rem;background:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:.8rem;resize:vertical;line-height:1.6}
+.sheet .row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.verdict{margin-top:12px;padding:12px;border-radius:var(--r);background:var(--ink);font-size:.95rem}
+
+/* 解決 */
+.closed{margin:28px 0 0;padding:22px 18px;border-radius:14px;border:1px solid var(--tone);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+.closed .stamp{display:inline-block;font-family:var(--serif);font-weight:800;color:var(--tone);border:2px solid var(--tone);padding:.1rem .6rem;border-radius:4px;transform:rotate(-4deg);margin-bottom:12px}
+.closed .truth{font-family:var(--serif);font-size:1.12rem;line-height:2;margin:0 0 16px}
+.closed ol{margin:0;padding-left:1.2rem;color:var(--soft);font-size:.92rem}
+.closed li{margin:4px 0}
+.closed .stats{display:flex;gap:18px;margin-top:14px;font-size:.88rem;color:var(--mute)}
+
+@media (prefers-reduced-motion:reduce){
+  .ln.fresh::after{animation:none;display:none}
+  .sheet{animation:none}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ===== 設定：Cloudflare Workers の URL に置き換える =====
+const API_BASE = "https://umigame-api.nattom666.workers.dev";
+// ======================================================
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+
+let pass = store.get("umigame:pass", "");
+let puzzles = [];
+let cur = null;     // 今の問題
+let st = null;      // 今の問題の進行状況
+let busy = false;
+const app = document.getElementById("app");
+const WIDTHS = ["78%", "62%", "88%", "70%", "56%"];
+
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "class") el.className = v;
+    else if (k === "style") el.style.cssText = v;
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : String(c));
+  return el;
+}
+
+async function api(path, body) {
+  let res;
+  try {
+    res = await fetch(API_BASE + path, {
+      method: body ? "POST" : "GET",
+      headers: { "Content-Type": "application/json", "X-Passcode": pass },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw new Error("サーバーに接続できません。通信状況を確認してください");
+  }
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    pass = ""; store.del("umigame:pass");
+    const e = new Error(data.error || "合言葉が違います"); e.auth = true; throw e;
+  }
+  if (!res.ok) throw new Error(data.error || "通信に失敗しました");
+  return data;
+}
+
+const stars = (n) => "★".repeat(n) + "☆".repeat(3 - n);
+const stateKey = (id) => "umigame:case:" + id;
+const freshState = () => ({ log: [], found: {}, hints: [], status: "playing", truth: null, keys: null });
+
+// ---------- 入室 ----------
+function renderGate(msg) {
+  document.body.removeAttribute("data-tone");
+  const input = h("input", { type: "password", placeholder: "合言葉", autocomplete: "current-password", "aria-label": "合言葉" });
+  const err = h("div", { class: "err", role: "alert" }, msg || "");
+  const btn = h("button", { class: "btn", type: "submit" }, "入室する");
+  const form = h("form", {
+    onsubmit: async (e) => {
+      e.preventDefault();
+      if (!input.value.trim()) return;
+      pass = input.value.trim(); btn.disabled = true; err.textContent = "";
+      try { await loadList(); store.set("umigame:pass", pass); }
+      catch (ex) { err.textContent = ex.message; btn.disabled = false; }
+    },
+  }, h("div", { class: "field" }, input, btn), err);
+  app.replaceChildren(h("main", { class: "wrap gate" },
+    h("h1", { class: "mark" }, h("span", {}, "ウミガメの"), h("span", {}, "スープ"), h("span", { class: "sub" }, "黒塗りの真相を、質問で剥がす")),
+    h("p", {}, "YES か NO で答えられる質問を重ねて、事件の真相を暴いてください。当てた事実の分だけ、黒塗りが外れていきます。"),
+    form));
+  input.focus();
+}
+
+// ---------- 一覧 ----------
+async function loadList() {
+  const data = await api("/api/puzzles");
+  puzzles = data.puzzles;
+  renderList();
+}
+
+function caseStatus(p) {
+  const s = store.get(stateKey(p.id), null);
+  if (!s || (!s.log.length && !s.hints.length)) return h("span", {}, "未着手");
+  if (s.status === "cleared") return h("span", { class: "state-done" }, "解決済み");
+  if (s.status === "gaveup") return h("span", {}, "真相を見た");
+  const req = Object.keys(s.found).filter((i) => p.keyRequired[i]).length;
+  return h("span", {}, `捜査中 ${req}/${p.requiredCount}`);
+}
+
+function renderList() {
+  document.body.removeAttribute("data-tone");
+  window.scrollTo(0, 0);
+  app.replaceChildren(h("main", { class: "wrap" },
+    h("header", { class: "top" },
+      h("p", { class: "logo" }, "ウミガメのスープ"),
+      h("button", { class: "link", onclick: () => { pass = ""; store.del("umigame:pass"); renderGate(); } }, "退室")),
+    h("p", { class: "lead" }, "気になる事件を選んでください。"),
+    h("ul", { class: "cases" }, puzzles.map((p) =>
+      h("li", { class: "case", "data-tone": p.tone },
+        h("button", { onclick: () => openCase(p.id) },
+          h("span", { class: "t" }, p.title),
+          h("span", { class: "p" }, p.problem),
+          h("span", { class: "meta" },
+            h("span", { class: "tone" }, p.tone),
+            h("span", { "aria-label": `難しさ${p.difficulty}` }, stars(p.difficulty)),
+            caseStatus(p))))))));
+}
+
+// ---------- プレイ ----------
+function openCase(id) {
+  cur = puzzles.find((p) => p.id === id);
+  st = store.get(stateKey(id), null) || freshState();
+  renderPlay();
+  window.scrollTo(0, 0);
+}
+const save = () => store.set(stateKey(cur.id), st);
+const reqFound = () => Object.keys(st.found).filter((i) => cur.keyRequired[i]).length;
+
+function addFound(hits, by) {
+  const fresh = [];
+  for (const k of hits || []) {
+    if (st.found[k.index]) continue;
+    st.found[k.index] = { text: k.text, by };
+    fresh.push(k.index);
+  }
+  return fresh;
+}
+
+function fileBlock(freshIdx = []) {
+  const lines = [];
+  for (let i = 0; i < cur.keyCount; i++) {
+    const f = st.found[i];
+    const opt = !cur.keyRequired[i];
+    if (f) {
+      lines.push(h("li", { class: "ln open" + (freshIdx.includes(i) ? " fresh" : "") },
+        h("span", { class: "txt" }, f.text,
+          h("span", { class: "by" }, (f.by === "解答" ? "解答で判明" : `質問${f.by}で判明`) + (opt ? "（おまけ）" : "")))));
+    } else {
+      lines.push(h("li", { class: "ln" + (opt ? " opt" : ""), "aria-label": opt ? "未判明（おまけ）" : "未判明" },
+        h("span", { class: "slab", style: `width:${WIDTHS[i % WIDTHS.length]}` }),
+        opt ? h("span", { class: "tag" }, "おまけ") : null));
+    }
+  }
+  const done = reqFound() === cur.requiredCount && st.status === "playing";
+  return h("section", { class: "file", "aria-live": "polite" },
+    h("div", { class: "file-head" },
+      h("h2", {}, "真相"),
+      h("span", { class: "n" }, `判明 ${reqFound()} / ${cur.requiredCount}`)),
+    h("ol", { class: "lines" }, lines),
+    done ? h("p", { class: "ready" }, "必要な事実はそろいました。解答して事件を閉じましょう。") : null);
+}
+
+function qaItem(item, idx) {
+  const n = idx + 1;
+  const sub = [];
+  if (item.note) sub.push(h("span", { class: "note" }, item.note));
+  if (item.revealed) sub.push(h("span", { class: "hit" }, "真相の一部が明らかになった"));
+  if (item.recheck === "same") sub.push(h("span", {}, "再判定でも同じ答え"));
+  if (item.recheck === "changed") sub.push(h("span", {}, `再判定で修正（前は ${item.prev}）`));
+  if (item.engine === "backup") sub.push(h("span", {}, "予備のAIで判定"));
+  if (!item.recheck && st.status === "playing" && item.a !== "質問を変えてください") {
+    sub.push(h("button", { onclick: () => recheck(idx) }, "この判定に異議あり"));
+  }
+  return h("li", { class: "qa" },
+    h("div", { class: "row" },
+      h("span", { class: "qq" }, h("span", { class: "no" }, `Q${n}`), item.q),
+      h("span", { class: "badge a-" + item.a }, item.a === "質問を変えてください" ? "質問を変えて" : item.a)),
+    sub.length ? h("div", { class: "sub" }, sub) : null);
+}
+
+function closedBlock() {
+  const keys = st.keys || [];
+  return h("section", { class: "closed" },
+    h("span", { class: "stamp" }, st.status === "cleared" ? "解決" : "真相"),
+    h("p", { class: "truth" }, st.truth),
+    h("ol", {}, keys.map((k, i) => {
+      const f = st.found[i];
+      const how = f ? (f.by === "解答" ? "解答で的中" : `質問${f.by}で的中`) : "未発見";
+      return h("li", {}, `${k.text}（${how}${k.required ? "" : "・おまけ"}）`);
+    })),
+    h("div", { class: "stats" },
+      h("span", {}, `質問 ${st.log.length}回`),
+      h("span", {}, `ヒント ${st.hints.length}回`)),
+    h("div", { style: "margin-top:16px" },
+      h("button", { class: "btn ghost", onclick: () => { st = freshState(); save(); renderPlay(); } }, "最初から遊び直す")));
+}
+
+function renderPlay(freshIdx = []) {
+  document.body.setAttribute("data-tone", cur.tone);
+  const playing = st.status === "playing";
+
+  const log = h("ul", { class: "log", id: "log" });
+  if (!st.log.length && !st.hints.length) log.append(h("li", { class: "empty" }, "最初の質問を送ってみましょう。例：「女性は誰かに合図を送っていますか？」"));
+  const merged = [];
+  st.log.forEach((item, i) => merged.push({ type: "qa", item, i, at: item.at || i }));
+  st.hints.forEach((hint) => merged.push({ type: "hint", hint, at: hint.at }));
+  merged.sort((a, b) => a.at - b.at);
+  for (const m of merged) {
+    log.append(m.type === "qa" ? qaItem(m.item, m.i) : h("li", { class: "hintline" }, `ヒント${m.hint.index + 1}：${m.hint.text}`));
+  }
+
+  const main = h("main", { class: "play" },
+    h("div", { class: "bar" }, h("div", { class: "wrap" },
+      h("button", { class: "link", onclick: renderList }, "← 事件一覧"),
+      h("span", { class: "count" }, `質問 ${st.log.length}`))),
+    h("div", { class: "wrap" },
+      h("section", { class: "problem" },
+        h("div", { class: "meta" }, h("span", { class: "tone" }, cur.tone), h("span", {}, stars(cur.difficulty))),
+        h("h1", {}, cur.title),
+        h("p", { class: "q" }, cur.problem)),
+      playing ? fileBlock(freshIdx) : closedBlock(),
+      log));
+
+  app.replaceChildren(main);
+  if (playing) app.append(dock());
+}
+
+function dock() {
+  const ta = h("textarea", { rows: 1, maxlength: 200, placeholder: "YES/NOで答えられる質問", "aria-label": "質問" });
+  const err = h("div", { class: "err", role: "alert", id: "dockErr" });
+  const send = h("button", { class: "btn", type: "submit" }, "質問する");
+  ta.addEventListener("input", () => { ta.style.height = "auto"; ta.style.height = ta.scrollHeight + "px"; });
+  ta.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); }
+  });
+  const form = h("form", { class: "compose", onsubmit: (e) => { e.preventDefault(); ask(ta.value, ta, err); } }, ta, send);
+  const hintsLeft = cur.hintCount - st.hints.length;
+  return h("div", { class: "dock" }, h("div", { class: "wrap" },
+    h("div", { class: "acts" },
+      h("button", { class: "solve", onclick: openSolve }, "解答する"),
+      h("button", { onclick: () => hint(err), disabled: hintsLeft <= 0 }, hintsLeft > 0 ? `ヒント（残り${hintsLeft}）` : "ヒントなし"),
+      h("button", { onclick: giveUp }, "降参する")),
+    form, err));
+}
+
+const nextAt = () => st.log.length + st.hints.length;
+
+async function ask(text, ta, err) {
+  const q = text.trim();
+  if (!q || busy) return;
+  busy = true; err.textContent = "";
+  const log = document.getElementById("log");
+  log.querySelector(".empty")?.remove();
+  const wait = h("li", { class: "qa" }, h("div", { class: "row" },
+    h("span", { class: "qq" }, h("span", { class: "no" }, `Q${st.log.length + 1}`), q),
+    h("span", { class: "badge a-wait" }, "判定中")));
+  log.append(wait); ta.value = ""; ta.style.height = "auto";
+  wait.scrollIntoView({ behavior: "smooth", block: "end" });
+  try {
+    const r = await api("/api/ask", { id: cur.id, question: q, history: st.log.map((x) => ({ q: x.q, a: x.a })) });
+    const item = { q, a: r.answer, note: r.note, hits: r.hits.map((x) => x.index), engine: r.engine, at: nextAt() };
+    st.log.push(item);
+    const fresh = addFound(r.hits, st.log.length);
+    item.revealed = fresh.length > 0;
+    save(); renderPlay(fresh);
+    document.querySelector("#log li:last-child")?.scrollIntoView({ block: "end" });
+    document.querySelector(".compose textarea")?.focus();
+  } catch (e) {
+    wait.remove(); ta.value = q;
+    if (e.auth) return renderGate(e.message);
+    err.textContent = e.message;
+  } finally { busy = false; }
+}
+
+async function recheck(idx) {
+  if (busy) return;
+  busy = true;
+  const item = st.log[idx];
+  try {
+    const r = await api("/api/ask", {
+      id: cur.id, question: item.q, recheck: item.a,
+      history: st.log.slice(0, idx).map((x) => ({ q: x.q, a: x.a })),
+    });
+    if (r.answer === item.a) item.recheck = "same";
+    else { item.recheck = "changed"; item.prev = item.a; item.a = r.answer; item.note = r.note; }
+    item.hits = r.hits.map((x) => x.index);
+    const fresh = addFound(r.hits, idx + 1);
+    if (fresh.length) item.revealed = true;
+    save(); renderPlay(fresh);
+  } catch (e) {
+    if (e.auth) return renderGate(e.message);
+    const el = document.getElementById("dockErr"); if (el) el.textContent = e.message;
+  } finally { busy = false; }
+}
+
+async function hint(err) {
+  if (busy) return;
+  busy = true;
+  try {
+    const r = await api("/api/hint", { id: cur.id, index: st.hints.length });
+    st.hints.push({ index: r.index, text: r.hint, at: nextAt() });
+    save(); renderPlay();
+    document.querySelector("#log li:last-child")?.scrollIntoView({ block: "end" });
+  } catch (e) {
+    if (e.auth) return renderGate(e.message);
+    err.textContent = e.message;
+  } finally { busy = false; }
+}
+
+async function giveUp() {
+  if (busy || !confirm("真相を表示します。この事件は「真相を見た」になります。よろしいですか？")) return;
+  busy = true;
+  try {
+    const r = await api("/api/reveal", { id: cur.id });
+    st.status = "gaveup"; st.truth = r.truth; st.keys = r.keys;
+    save(); renderPlay(); window.scrollTo({ top: 0 });
+  } catch (e) {
+    if (e.auth) return renderGate(e.message);
+    alert(e.message);
+  } finally { busy = false; }
+}
+
+function openSolve() {
+  const ta = h("textarea", { maxlength: 600, placeholder: "例：女性は〇〇のために手を振っていた。なぜなら…", "aria-label": "解答" });
+  const verdict = h("div", { "aria-live": "polite" });
+  const go = h("button", { class: "btn", type: "button" }, "解答を送る");
+  const close = () => bg.remove();
+  const bg = h("div", { class: "sheet-bg", onclick: (e) => { if (e.target === bg) close(); } },
+    h("div", { class: "sheet", role: "dialog", "aria-label": "解答する" },
+      h("h3", {}, "真相を推理する"),
+      h("p", {}, "わかったことを文章で書いてください。必要な事実がすべて含まれていれば解決です。質問で判明済みの事実は書かなくても構いません。"),
+      ta, verdict,
+      h("div", { class: "row" }, h("button", { class: "btn ghost", type: "button", onclick: close }, "閉じる"), go)));
+  go.addEventListener("click", async () => {
+    const guess = ta.value.trim();
+    if (!guess || busy) return;
+    busy = true; go.disabled = true; go.textContent = "判定中…";
+    try {
+      const r = await api("/api/solve", { id: cur.id, guess, found: Object.keys(st.found).map(Number) });
+      const fresh = addFound(r.covered, "解答");
+      if (r.cleared) {
+        st.status = "cleared"; st.truth = r.truth; st.keys = r.keys;
+        save(); close(); renderPlay(fresh); window.scrollTo({ top: 0 });
+        return;
+      }
+      save();
+      verdict.replaceChildren(h("div", { class: "verdict" },
+        h("div", {}, r.feedback || "まだ足りない事実があります。"),
+        h("div", { style: "color:var(--mute);font-size:.85rem;margin-top:4px" },
+          `的中 ${r.covered.length}件／必要な事実はあと ${r.missingCount}件`)));
+      if (fresh.length) renderPlayBehind(fresh);
+    } catch (e) {
+      if (e.auth) { close(); return renderGate(e.message); }
+      verdict.replaceChildren(h("div", { class: "verdict", style: "color:var(--no)" }, e.message));
+    } finally { busy = false; go.disabled = false; go.textContent = "解答を送る"; }
+  });
+  document.body.append(bg);
+  ta.focus();
+}
+
+// シートを開いたまま、背面の黒塗りだけ更新する
+function renderPlayBehind(fresh) {
+  const old = document.querySelector(".file");
+  if (old) old.replaceWith(fileBlock(fresh));
+}
+
+// ---------- 起動 ----------
+(async () => {
+  if (!pass) return renderGate();
+  try { await loadList(); }
+  catch (e) { renderGate(e.auth ? e.message : e.message); }
+})();
+</script>
+</body>
+</html>
