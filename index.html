@@ -203,7 +203,7 @@ async function api(path, body) {
   return data;
 }
 
-const stars = (n) => "★".repeat(n) + "☆".repeat(3 - n);
+const stars = (n) => "★".repeat(n) + "☆".repeat(5 - n);
 const stateKey = (id) => "umigame:case:" + id;
 const freshState = () => ({ log: [], found: {}, hints: [], status: "playing", truth: null, keys: null });
 
